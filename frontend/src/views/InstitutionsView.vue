@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import { institutionApi } from '@/api'
+import { institutionApi, publicApi } from '@/api'
 import { Search, OfficeBuilding, Location, Phone, Document } from '@element-plus/icons-vue'
 
 export default {
@@ -140,8 +140,18 @@ export default {
       ]
     }
   },
-  created() { this.loadInstitutions() },
+  async created() { await Promise.all([this.loadInstitutions(), this.loadStats()]) },
+
   methods: {
+    async loadStats() {
+      try {
+        const res = await publicApi.getHomeStats()
+        const data = res.data || []
+        if (data.length > 0) {
+          this.stats = data.map(s => ({ value: s.statValue + (s.statUnit || ''), label: s.statLabel }))
+        }
+      } catch (e) { /* 使用默认数据 */ }
+    },
     async loadInstitutions(page) {
       if (page) this.currentPage = page
       this.loading = true

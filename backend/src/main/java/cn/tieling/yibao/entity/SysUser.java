@@ -37,6 +37,7 @@ public class SysUser {
 
     /**
      * 角色类型
+     * admin      - 系统管理员（后台CMS）
      * supervisor - 医保监管部门
      * hospital   - 医疗机构
      * patient    - 参保人员
@@ -56,6 +57,10 @@ public class SysUser {
     /** 医保卡号（参保人员） */
     @Column(name = "insurance_no", length = 32)
     private String insuranceNo;
+
+    /** 备注 */
+    @Column(length = 256)
+    private String remark;
 
     /** 状态：1-正常 0-禁用 */
     @Column(nullable = false)

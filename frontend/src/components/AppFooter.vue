@@ -6,7 +6,7 @@
         <div class="footer-col footer-brand">
           <img src="@/assets/images/logo.png" alt="铁岭医保影像云" class="footer-logo" />
           <p class="footer-desc">
-            铁岭市医保影像云统一服务门户，为医保监管部门、医疗机构、参保人员及系统开发者提供一站式数字化服务。
+            {{ siteConfig['site.subtitle'] || '铁岭市医保影像云统一服务门户，为医保监管部门、医疗机构、参保人员及系统开发者提供一站式数字化服务。' }}
           </p>
         </div>
 
@@ -38,11 +38,15 @@
           <ul class="contact-list">
             <li>
               <span class="label">主办单位：</span>
-              <span>铁岭市医疗保障局</span>
+              <span>{{ siteConfig['site.host'] || '铁岭市医疗保障局' }}</span>
             </li>
             <li>
               <span class="label">技术支持：</span>
-              <span>024-XXXX-XXXX</span>
+              <span>{{ siteConfig['site.tech_support'] || '融御科技' }}</span>
+            </li>
+            <li>
+              <span class="label">联系电话：</span>
+              <span>{{ siteConfig['site.phone'] || '024-XXXX-XXXX' }}</span>
             </li>
             <li>
               <span class="label">服务时间：</span>
@@ -55,25 +59,42 @@
 
     <div class="footer-bottom">
       <div class="page-container footer-bottom-inner">
-        <span>© 2025 铁岭市医疗保障局 版权所有</span>
+        <span>{{ siteConfig['site.copyright'] || '© 2025 铁岭市医疗保障局 版权所有' }}</span>
         <span class="divider">|</span>
         <a href="#">隐私政策</a>
         <span class="divider">|</span>
         <a href="#">使用条款</a>
         <span class="divider">|</span>
-        <span>辽ICP备XXXXXXXX号</span>
+        <span>{{ siteConfig['site.icp'] || '辽ICP备XXXXXXXX号' }}</span>
       </div>
     </div>
   </footer>
 </template>
 
 <script>
+import { publicApi } from '@/api'
+
 export default {
-  name: 'AppFooter'
+  name: 'AppFooter',
+  data() {
+    return {
+      siteConfig: {}
+    }
+  },
+  async created() {
+    try {
+      const res = await publicApi.getSiteConfig('basic')
+      this.siteConfig = res.data || {}
+    } catch (e) {
+      this.siteConfig = {}
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/styles/variables.scss';
+
 .app-footer {
   background: #1E293B;
   color: rgba(255, 255, 255, 0.75);
@@ -86,6 +107,8 @@ export default {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr 1.5fr;
       gap: 40px;
+      @media (max-width: 1024px) { grid-template-columns: 1fr 1fr; }
+      @media (max-width: 640px) { grid-template-columns: 1fr; }
     }
 
     .footer-brand {
@@ -103,74 +126,50 @@ export default {
 
     .footer-col {
       h4 {
-        color: white;
         font-size: 14px;
         font-weight: 600;
+        color: white;
         margin-bottom: 16px;
         padding-bottom: 8px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
       }
-
       ul {
         list-style: none;
+        padding: 0;
+        margin: 0;
         li {
           margin-bottom: 10px;
-          font-size: 13px;
-        }
-        a {
-          color: rgba(255, 255, 255, 0.65);
-          transition: color 0.2s;
-          &:hover { color: white; }
-        }
-      }
-
-      .contact-list {
-        li {
-          display: flex;
-          gap: 4px;
-          .label {
-            color: rgba(255, 255, 255, 0.45);
-            white-space: nowrap;
+          a, .router-link-active {
+            font-size: 13px;
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            transition: color 0.2s;
+            &:hover { color: white; }
           }
         }
+      }
+      .contact-list li {
+        display: flex;
+        gap: 6px;
+        font-size: 13px;
+        color: rgba(255,255,255,0.6);
+        .label { color: rgba(255,255,255,0.4); flex-shrink: 0; }
       }
     }
   }
 
   .footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255,255,255,0.08);
     padding: 16px 0;
-
     .footer-bottom-inner {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
       font-size: 12px;
-      color: rgba(255, 255, 255, 0.4);
-
-      .divider { opacity: 0.3; }
-      a {
-        color: rgba(255, 255, 255, 0.4);
-        &:hover { color: rgba(255, 255, 255, 0.7); }
-      }
-    }
-  }
-}
-
-@media (max-width: $breakpoint-md) {
-  .app-footer {
-    .footer-main {
-      .footer-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 24px;
-      }
-      .footer-brand {
-        grid-column: 1 / -1;
-      }
-    }
-    .footer-bottom-inner {
+      color: rgba(255,255,255,0.4);
       flex-wrap: wrap;
-      justify-content: center;
+      a { color: rgba(255,255,255,0.4); text-decoration: none; &:hover { color: rgba(255,255,255,0.7); } }
+      .divider { color: rgba(255,255,255,0.2); }
     }
   }
 }

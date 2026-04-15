@@ -99,10 +99,33 @@
 
 <script>
 import { Document } from '@element-plus/icons-vue'
+import { publicApi } from '@/api'
 
 export default {
   name: 'DeveloperView',
   components: { Document },
+  async created() {
+    await this.loadDevApis()
+  },
+  methods: {
+    async loadDevApis() {
+      try {
+        const res = await publicApi.getDevApis()
+        const data = res.data || []
+        if (data.length > 0) {
+          this.apis = data.map(item => ({
+            method: item.method || 'GET',
+            path: item.apiPath || item.path,
+            desc: item.description || item.desc,
+            auth: item.requireAuth !== false,
+            category: item.category || 'auth'
+          }))
+        }
+      } catch (e) {
+        // 使用默认数据
+      }
+    }
+  },
   data() {
     return {
       activeApiTab: 'all',

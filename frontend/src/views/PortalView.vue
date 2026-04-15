@@ -69,6 +69,7 @@
 import { mapGetters } from 'vuex'
 import { authApi, newsApi } from '@/api'
 import { ArrowRight, Monitor, OfficeBuilding, Cellphone, Setting, Document, Share, Search, Bell } from '@element-plus/icons-vue'
+import { publicApi } from '@/api'
 
 const ROLE_SYSTEMS = {
   supervisor: [
@@ -99,6 +100,7 @@ export default {
   data() {
     return {
       notices: [],
+      dynamicSystems: null,
       quickActions: [
         { label: '政策法规', path: '/policy', icon: 'Document', color: '#1B6FD8' },
         { label: '新闻动态', path: '/news', icon: 'Bell', color: '#0891B2' },
@@ -119,13 +121,38 @@ export default {
       return colors[this.userRole] || '#1B6FD8'
     },
     currentSystems() {
-      return ROLE_SYSTEMS[this.userRole] || []
+      const src = this.dynamicSystems || ROLE_SYSTEMS
+      return src[this.userRole] || []
     }
   },
-  created() {
-    this.loadNotices()
+  async created() {
+    await Promise.all([this.loadNotices(), this.loadPortalEntries()])
   },
   methods: {
+    async loadPortalEntries() {
+      try {
+        const res = await publicApi.getPortalEntries()
+        const data = res.data || []
+        if (data.length > 0) {
+          // 将后台配置的门户入口按角色分组覆盖ROLE_SYSTEMS
+          const grouped = {}
+          data.forEach(item => {
+            if (!grouped[item.roleGroup]) grouped[item.roleGroup] = []
+            grouped[item.roleGroup].push({
+              name: item.name,
+              desc: item.description,
+              icon: item.icon || 'Document',
+              color: this.roleColor,
+              system: item.roleGroup + '-' + item.id,
+              url: item.linkUrl
+            })
+          })
+          this.dynamicSystems = grouped
+        }
+      } catch (e) {
+        // 使用默认ROLE_SYSTEMS
+      }
+    },
     async loadNotices() {
       try {
         const res = await newsApi.latest()

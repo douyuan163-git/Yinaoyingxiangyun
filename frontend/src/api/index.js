@@ -64,6 +64,24 @@ export const institutionApi = {
   stats: () => request.get('/institution/stats')
 }
 
+// ==================== 公共CMS配置接口 ====================
+export const publicApi = {
+  /** 获取网站基本配置 */
+  getSiteConfig: (groupKey) => request.get('/public/site-config', { params: { groupKey } }),
+
+  /** 获取Banner列表 */
+  getBanners: () => request.get('/public/banners'),
+
+  /** 获取首页统计数字 */
+  getHomeStats: () => request.get('/public/home-stats'),
+
+  /** 获取服务门户入口 */
+  getPortalEntries: () => request.get('/public/portal-entries'),
+
+  /** 获取开发者API列表 */
+  getDevApis: (category) => request.get('/public/dev-apis', { params: { category } })
+}
+
 // ==================== 检查互认接口 ====================
 export const recognitionApi = {
   /** 根据身份证号查询互认记录 */
