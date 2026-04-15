@@ -1,0 +1,54 @@
+// 铁岭医保影像云 - 品牌色彩系统
+// 主色：品牌蓝
+$primary: #1B6FD8;
+$primary-dark: #0D4FA0;
+$primary-light: #4A90E2;
+$primary-bg: #EBF3FF;
+
+// 角色标识色
+$supervisor-color: #1B6FD8;  // 医保监管 - 品牌蓝
+$hospital-color: #0891B2;    // 医疗机构 - 青色
+$patient-color: #EA580C;     // 参保人员 - 橙色
+$developer-color: #7C3AED;   // 系统开发者 - 紫色
+
+// 中性色
+$text-primary: #1E293B;
+$text-secondary: #475569;
+$text-muted: #94A3B8;
+$border-color: #E2E8F0;
+$bg-light: #F8FAFC;
+$bg-white: #FFFFFF;
+
+// 状态色
+$success: #16A34A;
+$warning: #D97706;
+$error: #DC2626;
+$info: #0284C7;
+
+// 字体
+$font-family: 'Source Han Sans CN', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+// 间距
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+$spacing-2xl: 48px;
+
+// 圆角
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-lg: 12px;
+$radius-xl: 16px;
+
+// 阴影
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+$shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+// 断点
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;

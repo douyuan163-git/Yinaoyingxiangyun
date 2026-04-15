@@ -1,0 +1,98 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: imaging-cloud-portal
+
+  # SQLite 数据源配置
+  datasource:
+    url: jdbc:sqlite:${user.home}/imaging_cloud.db
+    driver-class-name: org.sqlite.JDBC
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  # JPA 配置
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+  # Redis 配置
+  redis:
+    host: ${REDIS_HOST:127.0.0.1}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:}
+    database: 0
+    timeout: 3000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+        max-wait: -1ms
+
+  # Jackson 配置
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+    default-property-inclusion: non_null
+
+# JWT 配置
+jwt:
+  secret: TielingYibaoImagingCloud2026SecretKey@#$%
+  expiration: 86400000       # 24小时（毫秒）
+  refresh-expiration: 604800000  # 7天（毫秒）
+  header: Authorization
+  prefix: "Bearer "
+
+# SSO 配置
+sso:
+  # 白名单路径（不需要 Token 鉴权）
+  whitelist:
+    - /auth/login
+    - /auth/logout
+    - /auth/refresh
+    - /public/**
+    - /actuator/**
+  # 子系统注册列表
+  subsystems:
+    - id: supervisor
+      name: 医保监管系统
+      redirect-url: http://localhost:8081
+    - id: hospital
+      name: 云胶片医生工作站
+      redirect-url: http://localhost:8082
+    - id: patient
+      name: 参保人员查询端
+      redirect-url: http://localhost:8083
+    - id: developer
+      name: 开发者控制台
+      redirect-url: http://localhost:8084
+
+# 日志配置
+logging:
+  level:
+    cn.tieling.yibao: INFO
+    org.springframework.web: WARN
+    org.hibernate.SQL: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n"
+  file:
+    name: logs/imaging-cloud.log
+    max-size: 100MB
+    max-history: 30
